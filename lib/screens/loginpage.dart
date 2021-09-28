@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:healthy_delivery/widgets/custombutton.dart';
+import 'package:healthy_delivery/widgets/custominputfield.dart';
+import 'package:healthy_delivery/widgets/styles.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -46,43 +49,57 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("LoginPage"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      //appBar: AppBar(
+      //  title: const Text("LoginPage"),
+      //),
+      body: Container(
+        width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextField(
-              onChanged: (value) {
-                _email = value;
-              },
-              decoration: const InputDecoration(
-                hintText: "E-mail Field"
+            Container(
+              padding: const EdgeInsets.only(
+                top: 24.0,
+              ),
+              child: const Text(
+                "Welcome, \n Login to Your Account!",
+                textAlign: TextAlign.center,
+                style: Styles.boldHeading,
               ),
             ),
-            TextField(
-              onChanged: (value) {
-                _password = value;
-              },
-              decoration: const InputDecoration(
-                  hintText: "Password Field"
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                MaterialButton(
-                  onPressed: _loginUser,
-                  child: const Text("Login"),
+                CustomInputField(
+                  onChanged: (value) {
+                    _email = value;
+                  },
+                  hintText: "E-mail",
+                  obscureText: false,
                 ),
-                MaterialButton(
-                  onPressed: _createUser,
-                  child: const Text("Create New Account"),
+                CustomInputField(
+                  onChanged: (value) {
+                    _password = value;
+                  },
+                  hintText: "Password",
+                  obscureText: true,
+                ),
+                CustomButton(
+                  title: "Login",
+                  onPressed: _loginUser,
+                  outlineButton: false,
                 ),
               ],
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                  bottom: 16.0
+              ),
+              child: CustomButton(
+                title: "Create New Account",
+                onPressed: _createUser,
+                outlineButton: true,
+              ),
+            ),
           ],
         ),
       ),
