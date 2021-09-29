@@ -1,29 +1,26 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:healthy_delivery/screens/registerpage.dart';
 import 'package:healthy_delivery/widgets/custombutton.dart';
 import 'package:healthy_delivery/widgets/custominputfield.dart';
 import 'package:healthy_delivery/widgets/styles.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
   String _email = "";
   String _password = "";
 
-class _LoginPageState extends State<LoginPage> {
-
-  Future<void> _loginUser() async {
+  Future<void> _createUser() async {
     try {
       //Anonymously
       //UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
       //print("E-mail: $_email");
       //print("Password: $_password");
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
       print("User: $userCredential");
     } on FirebaseAuthException catch(e) {
       print("Error: $e");
@@ -32,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                 top: 24.0,
               ),
               child: const Text(
-                "Welcome, \n Login to Your Account!",
+                "Create a New Account!",
                 textAlign: TextAlign.center,
                 style: Styles.boldHeading,
               ),
@@ -70,8 +68,8 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: true,
                 ),
                 CustomButton(
-                  title: "Login",
-                  onPressed: _loginUser,
+                  title: "Create a New Account",
+                  onPressed: _createUser,
                   outlineButton: false,
                 ),
               ],
@@ -81,14 +79,9 @@ class _LoginPageState extends State<LoginPage> {
                   bottom: 16.0
               ),
               child: CustomButton(
-                title: "Create New Account",
+                title: "Back to Login",
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RegisterPage()
-                    )
-                  );
+                  Navigator.pop(context);
                 },
                 outlineButton: true,
               ),
