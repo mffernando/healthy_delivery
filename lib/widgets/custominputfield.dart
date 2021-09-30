@@ -7,11 +7,13 @@ class CustomInputField extends StatelessWidget {
   final String hintText;
   final Function(String)? onChanged;
   final bool obscureText;
+  final TextInputAction textInputAction;
 
   CustomInputField({
     required this.hintText,
     required this.onChanged,
-    required this.obscureText
+    required this.obscureText,
+    required this.textInputAction
   });
 
   @override
@@ -28,6 +30,7 @@ class CustomInputField extends StatelessWidget {
       child: TextField(
         onChanged: onChanged,
         obscureText: obscureText,
+        textInputAction: textInputAction,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hintText,

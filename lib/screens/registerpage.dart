@@ -11,10 +11,17 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
+class _RegisterPageState extends State<RegisterPage> {
+
+  //field values
   String _email = "";
   String _password = "";
 
-  Future<void> _createUser() async {
+  //default loading state
+  bool _registerLoading = false;
+
+  //create new user
+  Future<String?> _createUser() async {
     try {
       //Anonymously
       //UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
@@ -22,14 +29,66 @@ class RegisterPage extends StatefulWidget {
       //print("Password: $_password");
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
       print("User: $userCredential");
+      return null;
     } on FirebaseAuthException catch(e) {
-      print("Error: $e");
+      if (e.code == 'weak-password') {
+        return 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        return 'The account already exists for that email.';
+      }
+      return e.message; //default error message
     } catch(e) {
-      print("Error: $e");
+      return e.toString();
     }
   }
 
-class _RegisterPageState extends State<RegisterPage> {
+  void _submitForm(BuildContext context) async {
+
+    //start loading
+    setState(() {
+      _registerLoading = true;
+    });
+
+    //run create user account method
+    String? _createUserFeedback = await _createUser();
+
+    if(_createUserFeedback != null) {
+      _alertDialog(context, _createUserFeedback);
+
+      //stop loading
+      setState(() {
+        _registerLoading = false;
+      });
+
+    } else {
+      //navigate to home page
+     Navigator.pop(context);
+    }
+  }
+
+  // alert dialog to display some errors.
+  Future<void> _alertDialog(BuildContext context, String error) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Container(
+              child: Text(error),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Close Dialog"),
+              )
+            ],
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,6 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                   hintText: "E-mail",
                   obscureText: false,
+                  textInputAction: TextInputAction.next,
                 ),
                 CustomInputField(
                   onChanged: (value) {
@@ -66,11 +126,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                   hintText: "Password",
                   obscureText: true,
+                  textInputAction: TextInputAction.next,
                 ),
                 CustomButton(
                   title: "Create a New Account",
-                  onPressed: _createUser,
+                  onPressed: () {
+                    _submitForm(context);
+                  },
                   outlineButton: false,
+                  isLoading: _registerLoading,
                 ),
               ],
             ),
@@ -84,6 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Navigator.pop(context);
                 },
                 outlineButton: true,
+                isLoading: _registerLoading,
               ),
             ),
           ],
