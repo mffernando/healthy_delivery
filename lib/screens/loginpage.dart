@@ -15,21 +15,74 @@ class LoginPage extends StatefulWidget {
   String _email = "";
   String _password = "";
 
+  //default loading state
+  bool _loginLoading = false;
+
 class _LoginPageState extends State<LoginPage> {
 
-  Future<void> _loginUser() async {
+  Future<String?> _loginUser() async {
     try {
-      //Anonymously
-      //UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
-      //print("E-mail: $_email");
-      //print("Password: $_password");
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
       print("User: $userCredential");
+      return null;
     } on FirebaseAuthException catch(e) {
-      print("Error: $e");
+      if (e.code == 'weak-password') {
+        return 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        return 'The account already exists for that email.';
+      }
+      return e.message; //default error message
     } catch(e) {
-      print("Error: $e");
+      return e.toString();
     }
+  }
+
+  void _submitForm(BuildContext context) async {
+
+    //start loading
+    setState(() {
+      _loginLoading = true;
+    });
+
+    //run create user account method
+    String? _loginFeedback = await _loginUser();
+
+    if(_loginFeedback != null) {
+      _alertDialog(context, _loginFeedback);
+
+      //stop loading
+      setState(() {
+        _loginLoading = false;
+      });
+
+    }
+    //stop loading
+    setState(() {
+      _loginLoading = false;
+    });
+  }
+
+  // alert dialog to display some errors.
+  Future<void> _alertDialog(BuildContext context, String error) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Container(
+              child: Text(error),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Close Dialog"),
+              )
+            ],
+          );
+        }
+    );
   }
 
   @override
@@ -61,6 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   hintText: "E-mail",
                   obscureText: false,
+                  textInputAction: TextInputAction.next,
                 ),
                 CustomInputField(
                   onChanged: (value) {
@@ -68,11 +122,15 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   hintText: "Password",
                   obscureText: true,
+                  textInputAction: TextInputAction.next,
                 ),
                 CustomButton(
                   title: "Login",
-                  onPressed: _loginUser,
+                  onPressed: () {
+                    _submitForm(context);
+                  },
                   outlineButton: false,
+                  isLoading: _loginLoading,
                 ),
               ],
             ),
@@ -91,6 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
                 outlineButton: true,
+                isLoading: false,
               ),
             ),
           ],
