@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:healthy_delivery/tabs/hometab.dart';
+import 'package:healthy_delivery/tabs/savedtab.dart';
+import 'package:healthy_delivery/tabs/searchtab.dart';
 import 'package:healthy_delivery/widgets/custombottomtabs.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,21 +48,9 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               children: [
-                Container(
-                  child: Center(
-                    child: Text("HomePage"),
-                  ),
-                ),
-                Container(
-                  child: Center(
-                    child: Text("SearchPage"),
-                  ),
-                ),
-                Container(
-                  child: Center(
-                    child: Text("SavedPage"),
-                  ),
-                )
+                HomeTab(), //Home Tab
+                SearchTab(), //Search Tab
+                SavedTab(), //SavedTab
               ],
             ),
           ),
