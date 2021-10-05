@@ -20,4 +20,9 @@ class Styles {
       color: Colors.black
   );
 
+  static const regularText = TextStyle(
+      fontSize: 16.0,
+      color: Colors.black
+  );
+
 }

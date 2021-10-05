@@ -7,11 +7,13 @@ class CustomActionBar extends StatelessWidget {
   final String title;
   final bool hasBackArrow;
   final bool hasTitle;
+  final bool hasBackground;
 
   CustomActionBar({
     required this.title,
     required this.hasBackArrow,
-    required this.hasTitle
+    required this.hasTitle,
+    required this.hasBackground
   });
 
   @override
@@ -19,17 +21,18 @@ class CustomActionBar extends StatelessWidget {
 
     bool _hasBackArrow = hasBackArrow;
     bool _hasTitle = hasTitle;
+    bool _hasBackground = hasBackground;
 
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: _hasBackground ? LinearGradient(
           colors: [
             Colors.white,
             Colors.white.withOpacity(0),
           ],
           begin: Alignment(0, 0),
           end: Alignment(0, 1),
-        ),
+        ) : null,
       ),
       padding: EdgeInsets.only(
         top: 56.0,

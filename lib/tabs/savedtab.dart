@@ -16,6 +16,7 @@ class SavedTab extends StatelessWidget {
             title: "Saved Products",
             hasBackArrow: false, //if page has back arrow
             hasTitle: true, // if page has title
+            hasBackground: true, //if page has background
           ), //custom action bar
         ],
       ),
