@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_delivery/widgets/customactionbar.dart';
 import 'package:healthy_delivery/widgets/imageswipe.dart';
+import 'package:healthy_delivery/widgets/productamount.dart';
 import 'package:healthy_delivery/widgets/styles.dart';
 
 class ProductPage extends StatefulWidget {
@@ -45,6 +46,8 @@ class _ProductPageState extends State<ProductPage> {
 
                 //list of images
                 List imageList = documentData['images'];
+                //amount
+                List amountList = documentData['amount'];
 
                 return ListView(
                   padding: const EdgeInsets.only(
@@ -89,14 +92,61 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                     ),
                     //product size
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
                         vertical: 24.0,
                         horizontal: 24.0,
                       ),
                       child: Text(
-                          "Amount: ${documentData['amount']}",
-                          style: Styles.regularText,
+                          "Amount",
+                          style: Styles.regularBoldText,
+                      ),
+                    ),
+                    ProductAmount(
+                        amountList: amountList
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 65.0,
+                            height: 65.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Colors.grey,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Image(
+                              image: AssetImage(
+                                "assets/tab_saved.png",
+                              ),
+                              height: 22.0,
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 65.0,
+                              margin: const EdgeInsets.only(
+                                left: 16.0,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              alignment: Alignment.center,
+                              child: const Text(
+                                "Add to Cart",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
