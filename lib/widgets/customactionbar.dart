@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_delivery/widgets/styles.dart';
 
@@ -8,6 +10,10 @@ class CustomActionBar extends StatelessWidget {
   final bool hasBackArrow;
   final bool hasTitle;
   final bool hasBackground;
+  final CollectionReference _usersReference = FirebaseFirestore.instance.collection("Users");
+
+  //currenct user
+  User? _user = FirebaseAuth.instance.currentUser;
 
   CustomActionBar({
     required this.title,
@@ -30,11 +36,11 @@ class CustomActionBar extends StatelessWidget {
             Colors.white,
             Colors.white.withOpacity(0),
           ],
-          begin: Alignment(0, 0),
-          end: Alignment(0, 1),
+          begin: const Alignment(0, 0),
+          end: const Alignment(0, 1),
         ) : null,
       ),
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 56.0,
         left: 24.0,
         right: 24.0,
@@ -46,19 +52,25 @@ class CustomActionBar extends StatelessWidget {
         children: [
           //if page has back arrow
           if(_hasBackArrow)
-            Container(
-              width: 63.0,
-              height: 42.0,
-              decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(8.0)
-              ),
-              child: Center(
-                child: Image(
-                  image: AssetImage("assets/back_arrow.png"),
-                  width: 18.0,
-                  height: 18.0,
-                  color: Colors.white,
+            GestureDetector(
+              //return page
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                width: 63.0,
+                height: 42.0,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(8.0)
+                ),
+                child: const Center(
+                  child: Image(
+                    image: AssetImage("assets/back_arrow.png"),
+                    width: 18.0,
+                    height: 18.0,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -79,20 +91,34 @@ class CustomActionBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image(
+                const Image(
                   image: AssetImage("assets/cart.png"),
                   width: 18.0,
                   height: 18.0,
                   color: Colors.white,
                 ),
-                Text(
-                  "0",
-                  style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white
-                  ),
-                ),
+                StreamBuilder(
+                  //add to user cart
+                  stream: _usersReference.doc(_user!.uid).collection("Cart").snapshots(),
+                  builder: (context, snapshot) {
+
+                    int _totalItems = 0;
+
+                    //count all products in user's cart
+                    if(snapshot.connectionState == ConnectionState.active) {
+                      List _documents = (snapshot.data as dynamic).docs;
+                      _totalItems = _documents.length;
+                    }
+
+                    return Text(
+                      _totalItems.toString(),
+                      style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white
+                      ),
+                    );
+                  }),
               ],
             ),
           )

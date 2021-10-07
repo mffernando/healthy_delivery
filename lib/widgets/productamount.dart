@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 class ProductAmount extends StatefulWidget {
   final List amountList;
-  ProductAmount({required this.amountList});
+  final Function(String) onSelected;
+  ProductAmount(
+      {
+        required this.amountList,
+        required this.onSelected,
+      }
+      );
 
   @override
   _ProductAmountState createState() => _ProductAmountState();
@@ -24,6 +30,8 @@ class _ProductAmountState extends State<ProductAmount> {
             GestureDetector(
               onTap: () {
                 setState(() {
+                  //selected amount index
+                  widget.onSelected("${widget.amountList[i]}");
                   //selected button
                   _selected = i;
                 });
