@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomTabs extends StatefulWidget {
@@ -69,7 +70,7 @@ class _CustomBottomTabsState extends State<CustomBottomTabs> {
               imagePath: "assets/tab_logout.png", //icon
             selectedButton: _selectedTab == 3 ? true : false, //selected tab
             onPressed: () {
-              widget.pressedTab(3); //pressed tab
+              FirebaseAuth.instance.signOut();
             },
           ) // logout button
         ],
