@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   //initialize _tabsPageController
   @override
   void initState() {
+    //print("User ID: ${_firebaseServices.getUserId()}");
     _tabsPageController = PageController();
     super.initState();
   }

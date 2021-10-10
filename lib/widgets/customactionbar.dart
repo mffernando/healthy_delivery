@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:healthy_delivery/services/firebaseservices.dart';
 import 'package:healthy_delivery/widgets/styles.dart';
 
 //custom action bar
@@ -13,7 +13,10 @@ class CustomActionBar extends StatelessWidget {
   final CollectionReference _usersReference = FirebaseFirestore.instance.collection("Users");
 
   //currenct user
-  User? _user = FirebaseAuth.instance.currentUser;
+  //final User? _user = FirebaseAuth.instance.currentUser;
+
+  //initialize firebase services
+  FirebaseServices _firebaseServices = FirebaseServices();
 
   CustomActionBar({
     required this.title,
@@ -99,7 +102,7 @@ class CustomActionBar extends StatelessWidget {
                 ),
                 StreamBuilder(
                   //add to user cart
-                  stream: _usersReference.doc(_user!.uid).collection("Cart").snapshots(),
+                  stream: _usersReference.doc(_firebaseServices.getUserId()).collection("Cart").snapshots(),
                   builder: (context, snapshot) {
 
                     int _totalItems = 0;

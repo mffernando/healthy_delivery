@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:healthy_delivery/services/firebaseservices.dart';
 import 'package:healthy_delivery/widgets/customactionbar.dart';
 import 'package:healthy_delivery/widgets/imageswipe.dart';
 import 'package:healthy_delivery/widgets/productamount.dart';
@@ -19,19 +18,23 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  //initialize firebase services
+  FirebaseServices _firebaseServices = FirebaseServices();
 
-  //collections in firestore (Products Reference)
-  final CollectionReference _productsReference = FirebaseFirestore.instance.collection("Products");
-  //Users Reference
-  final CollectionReference _usersReference = FirebaseFirestore.instance.collection("Users");
   //get user id
-  User? _user = FirebaseAuth.instance.currentUser;
+  //User? _user = FirebaseAuth.instance.currentUser;
+
   //selected product amount
   String _selectedProductAmount = "0";
 
   //add to user's cart - function
   Future _addToCart() {
-    return _usersReference.doc(_user!.uid).collection("Cart").doc(widget.productId).set(
+    return _firebaseServices
+        .usersReference
+        .doc(_firebaseServices.getUserId())
+        .collection("Cart")
+        .doc(widget.productId)
+        .set(
         {
       "amount" : _selectedProductAmount
     }
@@ -50,7 +53,9 @@ class _ProductPageState extends State<ProductPage> {
         children: [
           FutureBuilder(
             //get product by id
-            future: _productsReference.doc(widget.productId).get(),
+            future: _firebaseServices.productsReference
+                .doc(widget.productId)
+                .get(),
             builder: (context, snapshot) {
               if(snapshot.hasError) {
                 return Scaffold(
