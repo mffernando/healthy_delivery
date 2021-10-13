@@ -102,7 +102,7 @@ class _ProductPageState extends State<ProductPage> {
                         horizontal: 24.0,
                       ),
                       child: Text(
-                          "R\$ ${documentData['price'][0]}",
+                          "R\$ ${documentData['price']}",
                           style: Styles.regularText,
                       ),
                     ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:healthy_delivery/screens/cartpage.dart';
 import 'package:healthy_delivery/services/firebaseservices.dart';
 import 'package:healthy_delivery/widgets/styles.dart';
 
@@ -83,46 +84,54 @@ class CustomActionBar extends StatelessWidget {
               title, //page title
               style: Styles.boldHeading
             ),
-          Container(
-            width: 63.0,
-            height: 42.0,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(8.0)
-            ),
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Image(
-                  image: AssetImage("assets/cart.png"),
-                  width: 18.0,
-                  height: 18.0,
-                  color: Colors.white,
-                ),
-                StreamBuilder(
-                  //add to user cart
-                  stream: _usersReference.doc(_firebaseServices.getUserId()).collection("Cart").snapshots(),
-                  builder: (context, snapshot) {
+          GestureDetector(
+            onTap: () {
+              //go to cart page
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => CartPage(),
+              ));
+            },
+            child: Container(
+              width: 63.0,
+              height: 42.0,
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(8.0)
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Image(
+                    image: AssetImage("assets/cart.png"),
+                    width: 18.0,
+                    height: 18.0,
+                    color: Colors.white,
+                  ),
+                  StreamBuilder(
+                    //add to user cart
+                    stream: _usersReference.doc(_firebaseServices.getUserId()).collection("Cart").snapshots(),
+                    builder: (context, snapshot) {
 
-                    int _totalItems = 0;
+                      int _totalItems = 0;
 
-                    //count all products in user's cart
-                    if(snapshot.connectionState == ConnectionState.active) {
-                      List _documents = (snapshot.data as dynamic).docs;
-                      _totalItems = _documents.length;
-                    }
+                      //count all products in user's cart
+                      if(snapshot.connectionState == ConnectionState.active) {
+                        List _documents = (snapshot.data as dynamic).docs;
+                        _totalItems = _documents.length;
+                      }
 
-                    return Text(
-                      _totalItems.toString(),
-                      style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white
-                      ),
-                    );
-                  }),
-              ],
+                      return Text(
+                        _totalItems.toString(),
+                        style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white
+                        ),
+                      );
+                    }),
+                ],
+              ),
             ),
           )
         ],
