@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_delivery/screens/productpage.dart';
 import 'package:healthy_delivery/widgets/customactionbar.dart';
-import 'package:healthy_delivery/widgets/styles.dart';
+import 'package:healthy_delivery/widgets/productcard.dart';
 
 class HomeTab extends StatelessWidget {
 
@@ -34,60 +34,16 @@ class HomeTab extends StatelessWidget {
                   bottom: 24.0,
                 ),
                 children: snapshot.data!.docs.map((document) {
-                    return GestureDetector(
-                      onTap: () {
-                        //go to product page
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => ProductPage(productId: document.id),
-                        ));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                          //color: Colors.grey,
-                          border: Border.all(),
-                        ),
-                        height: 100.0,
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 24.0
-                        ),
-                        //show first image of the products
-                        child: Stack(
-                          children: [
-                            Container(
-                              //image size
-                              height: 100.0,
-                              alignment: Alignment.centerRight,
-                              //padding: const EdgeInsets.all(20.0),
-                              child: ClipRRect(
-                                child: Image.network(
-                                  //first image
-                                  "${(document.data()as dynamic)['images'][0]}",
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                //product name
-                                children: [
-                                  Text(
-                                      "${(document.data()as dynamic)['name'].toUpperCase()}",
-                                      style: Styles.regularBoldText),
-                                  Text(
-                                      "R\$: ${(document.data()as dynamic)['price'][0]}",
-                                       style: Styles.regularText,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                    return ProductCard(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => ProductPage(productId: document.id)
+                          ));
+                        },
+                        imageUrl: (document.data()as dynamic)['images'][0],
+                        title: (document.data()as dynamic)['name'],
+                        price: "R\$ ${(document.data() as dynamic)['price']}",
+                        productId: document.id);
                   }).toList()
               );
             }
