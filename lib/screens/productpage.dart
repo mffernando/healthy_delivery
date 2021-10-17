@@ -19,7 +19,10 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   //initialize firebase services
-  final FirebaseServices _firebaseServices = FirebaseServices();
+  FirebaseServices _firebaseServices = FirebaseServices();
+
+  //get user id
+  //User? _user = FirebaseAuth.instance.currentUser;
 
   //selected product amount
   String _selectedProductAmount = "0";
@@ -35,20 +38,6 @@ class _ProductPageState extends State<ProductPage> {
         {
       "amount" : _selectedProductAmount
     }
-    );
-  }
-
-  //add to user's saved products - function
-  Future _addToSaved() {
-    return _firebaseServices
-        .usersReference
-        .doc(_firebaseServices.getUserId())
-        .collection("Saved")
-        .doc(widget.productId)
-        .set(
-        {
-          "amount" : _selectedProductAmount
-        }
     );
   }
   
@@ -150,26 +139,19 @@ class _ProductPageState extends State<ProductPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          GestureDetector(
-                            //add to saved products
-                            onTap: () async {
-                              await _addToSaved();
-                              ScaffoldMessenger.of(context).showSnackBar(_snackBar);
-                            },
-                            child: Container(
-                              width: 65.0,
-                              height: 65.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: Colors.grey,
+                          Container(
+                            width: 65.0,
+                            height: 65.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Colors.grey,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Image(
+                              image: AssetImage(
+                                "assets/tab_saved.png",
                               ),
-                              alignment: Alignment.center,
-                              child: const Image(
-                                image: AssetImage(
-                                  "assets/tab_saved.png",
-                                ),
-                                height: 22.0,
-                              ),
+                              height: 22.0,
                             ),
                           ),
                           Expanded(
