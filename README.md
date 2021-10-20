@@ -4,13 +4,16 @@ App for delivering healthy products
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1 - download the project
 
-A few resources to get you started if this is your first Flutter project:
+2 - configure Android and iOS firebase authentication
+	
+  Android: google-services.json
+	
+  iOS: GoogleService-info.plist
+  
+3 - Activate e-mail/password authentication on firebase
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+4 - Activate Firebase Storage (used to upload images)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+5 - Activate Cloud Firestore
